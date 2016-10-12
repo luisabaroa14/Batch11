@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/JsonExample.iml" filepath="$PROJECT_DIR$/JsonExample.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/googlemaps/googlemaps.iml" filepath="$PROJECT_DIR$/googlemaps/googlemaps.iml" />
+      <module fileurl="file://$PROJECT_DIR$/kenmaps/kenmaps.iml" filepath="$PROJECT_DIR$/kenmaps/kenmaps.iml" />
+      <module fileurl="file://$PROJECT_DIR$/retrofitexample/retrofitexample.iml" filepath="$PROJECT_DIR$/retrofitexample/retrofitexample.iml" />
+      <module fileurl="file://$PROJECT_DIR$/spotifyartist/spotifyartist.iml" filepath="$PROJECT_DIR$/spotifyartist/spotifyartist.iml" />
+      <module fileurl="file://$PROJECT_DIR$/spotifyplayer/spotifyplayer.iml" filepath="$PROJECT_DIR$/spotifyplayer/spotifyplayer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/trackspotify/trackspotify.iml" filepath="$PROJECT_DIR$/trackspotify/trackspotify.iml" />
+    </modules>
+  </component>
+</project>
