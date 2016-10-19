@@ -1,17 +1,19 @@
 package com.example.googlemaps;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -22,7 +24,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,11 +40,11 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, View.OnClickListener {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, View.OnClickListener, GoogleMap.OnMapLongClickListener {
 
     private GoogleMap mMap;
 
-    double LATLON;
+    public List<LatLng> latlngs;
 
 
     @Override
@@ -55,95 +56,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+
         ImageView searchBtn = (ImageView) findViewById(R.id.btn_search);
         searchBtn.setOnClickListener(this);
 
+        ImageView policeBtn = (ImageView) findViewById(R.id.btn_police);
+        policeBtn.setOnClickListener(this);
 
 
 
-    }
-
-    private void getSector() {
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://hoyodecrimen.com")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        Sectors sectors = retrofit.create(Sectors.class);
-
-
-        sectors.getSectorJSON().enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try {
-                    List<LatLng> latlngs = new ArrayList<>();
-                    List<List<LatLng>> latlngSectores = new ArrayList<List<LatLng>>();
-                    List<LatLng> sector = new ArrayList<>();
-
-
-                    String jsonString = response.body().string();
-                    JSONObject object = new JSONObject(jsonString);
-                    JSONArray features = object.getJSONArray("features");
-                    JSONObject feature = features.getJSONObject(0);
-                    JSONObject geometry = feature.getJSONObject("geometry");
-                    JSONArray coordinates = geometry.getJSONArray("coordinates");
-//                    for (int i = 0; i < coordinates.length(); i++) {
-//                   Sirve para llamar a la lista de las coordenadas
-                    JSONArray coordinate = coordinates.getJSONArray(0);
-
-
-                    for (int j = 0; j < coordinate.length(); j++) {
-//                      Sirve para mandar a llamar a todas las coordenadas "j"
-                        JSONArray coordinateIndex = coordinate.getJSONArray(j);
-
-                        double lon = coordinateIndex.getDouble(0);
-                        double lat = coordinateIndex.getDouble(1);
-
-                        LatLng latlng = new LatLng(lat, lon);
-                        LATLON = (lat + lon);
-                        latlngs.add(latlng);
-                        sector.add(latlng);
-//                            Log.d("myLog", "lat: " + lat + " lon: " + lon);
-
-                        latlngSectores.add(sector);
-                       Log.d("myLog", latlngSectores.get(0).get(j).toString());
-
-
-                        // Instantiates a new Polygon object and adds points to define a rectangle
-                        PolygonOptions rectOptions = new PolygonOptions()
-                                .strokeWidth(5)
-                                .fillColor(0x220000FF)
-                                .geodesic(true)
-                                .addAll(latlngSectores.get(j));
-// Get back the mutable Polygon
-                        Polygon polygon = mMap.addPolygon(rectOptions);
-                    }
-
-
-                    for (int i = 0; i < latlngSectores.size(); i++) {
-                        for (int j = 0; j < latlngSectores.get(i).size(); j++) {
-
-                        }
-
-                    }
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-            }
-
-
-        });
+        getSector();
 
 
     }
@@ -167,11 +89,157 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Address address = addressList.get(0);
             LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
             mMap.addMarker(new MarkerOptions().position(latLng).title(location));
-            mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+//            mMap.animateCamera(CameraUpdateFactory);
+
+        }
+    }
+
+    private void getSector() {
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://hoyodecrimen.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        Sectors sectors = retrofit.create(Sectors.class);
+
+
+        sectors.getSectorJSON().enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try {
+                    int x = 0;
+
+                    List<Integer> listColors = new ArrayList<Integer>();
+//                    listColors.add(Color.argb(129, 255, 0, 0));
+//                    listColors.add(Color.argb(330, 255, 0, 0));
+//                    listColors.add(Color.argb(79, 23, 228, 20));
+//                    listColors.add(Color.BLACK);
+//                    listColors.add(Color.YELLOW);
+                    listColors.add(ContextCompat.getColor(MapsActivity.this, R.color.colorAccent2));
+//                    listColors.add(Color.GREEN);
+//                    listColors.add(Color.CYAN);
+//                    listColors.add(Color.GRAY);
+
+
+                    String jsonString = response.body().string();
+                    JSONObject object = new JSONObject(jsonString);
+                    JSONArray features = object.getJSONArray("features");
+
+                     Polygon Ciudad = null;
+                    for (int k = 0; k < features.length(); k++) {
+                        latlngs = new ArrayList<>();
+
+
+                        JSONObject feature = features.getJSONObject(k);
+                        JSONObject properties = feature.getJSONObject("properties");
+                        String municipios = properties.getString("municipio");
+                        JSONObject geometry = feature.getJSONObject("geometry");
+                        JSONArray coordinates = geometry.getJSONArray("coordinates");
+
+
+                            JSONArray coordinateIndex = coordinates.getJSONArray(0);
+
+                        for (int i = 0; i < coordinateIndex.length(); i++) {
+
+                            JSONArray jsonArray = coordinateIndex.getJSONArray(i);
+
+
+                            if (jsonArray.get(0) instanceof JSONArray) {
+                                Log.e("myLog", "encontra array");
+
+
+                                    JSONArray jsonArray2 = jsonArray.getJSONArray(0);
+
+                                for (int l = 0; l < jsonArray2.length(); l++) {
+                                    double lon = jsonArray2.getDouble(0);
+                                    double lat = jsonArray2.getDouble(1);
+                                    LatLng latlng = new LatLng(lat, lon);
+                                    latlngs.add(latlng);
+                                }
+                            } else {
+                                double lon = jsonArray.getDouble(0);
+                                double lat = jsonArray.getDouble(1);
+                                LatLng latlng = new LatLng(lat, lon);
+                                latlngs.add(latlng);
+                            }
+
+                        }
+                        PolygonOptions recOptions = new PolygonOptions()
+                                .strokeWidth(2)
+                                .fillColor(listColors.get(x % listColors.size()))
+                                .addAll(latlngs);
+
+                        Ciudad = mMap.addPolygon(recOptions);
+
+                         Log.i("myLog", "contador:  " + x++);
+                        Log.i("myLog", "municipio:  " + municipios);
+                    }
+
+                    mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+                        @Override
+                        public void onMapLongClick(LatLng latLng) {
+
+                            Toast.makeText(getApplicationContext(), "Desea reportar un crimen?", Toast.LENGTH_SHORT).show();
+                            mMap.addMarker(new MarkerOptions().position(latLng));
+
+                            Geocoder geocoder = new Geocoder(getApplicationContext());
+                            List<Address> addressList = null;
+                            try {
+//                                addressList = geocoder.getFromLocationName(latLng.toString(), 1);
+                                addressList= geocoder.getFromLocation(latLng.latitude,latLng.longitude,10);
+
+
+
+                                for (int l = 0; l <addressList.size() ; l++) {
+
+//                                    mMap.addMarker(new MarkerOptions().position(addressList));
+                                }
+
+
+                                Address address =addressList.get(0);
+                                String line =address.getAddressLine(0);
+                                String line2 =address.getAddressLine(1);
+                                String direccion = line2 +" "+ line;
+                                Log.i("myLog", "direccion :"+ address.toString());
+                                Log.i("myLog", "line :"+ direccion);
+
+
+
+
+                                Log.i("myLog", "direccion :"+ addressList);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                Log.i("myLog", "calle :"+ addressList );
+                            }
+
+
+                        }
+                    });
+
+
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+             }
+
 
         }
 
+        );
+
+
     }
+
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -179,12 +247,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(0, 0);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        LatLng mexico = new LatLng(19.374528, -99.180734);
 
-        getSector();
+//            mMap.addMarker(new MarkerOptions().position(mexico).title("Marker in Sydney"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mexico, 11));
+        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
 
 //        // Instantiates a new Polygon object and adds points to define a rectangle
@@ -215,6 +282,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         if (R.id.btn_search == view.getId()) {
             search(view);
+
+        }
+        if (R.id.btn_police == view.getId()) {
+
+            Intent intent= new Intent(this, CrimeActivity.class);
+            startActivity(intent);
+
         }
     }
+
+
+    @Override
+    public void onMapLongClick(LatLng latLng) {
+
+    }
 }
+
+
+
+
+
+
