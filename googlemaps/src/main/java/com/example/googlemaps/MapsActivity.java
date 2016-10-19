@@ -20,7 +20,10 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
@@ -89,7 +92,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Address address = addressList.get(0);
             LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
             mMap.addMarker(new MarkerOptions().position(latLng).title(location));
-//            mMap.animateCamera(CameraUpdateFactory);
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 17));
+
 
         }
     }
@@ -111,15 +115,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     int x = 0;
 
                     List<Integer> listColors = new ArrayList<Integer>();
-//                    listColors.add(Color.argb(129, 255, 0, 0));
-//                    listColors.add(Color.argb(330, 255, 0, 0));
 //                    listColors.add(Color.argb(79, 23, 228, 20));
-//                    listColors.add(Color.BLACK);
-//                    listColors.add(Color.YELLOW);
-                    listColors.add(ContextCompat.getColor(MapsActivity.this, R.color.colorAccent2));
-//                    listColors.add(Color.GREEN);
-//                    listColors.add(Color.CYAN);
-//                    listColors.add(Color.GRAY);
+                    listColors.add(ContextCompat.getColor(MapsActivity.this, R.color.colorY));
+                    listColors.add(ContextCompat.getColor(MapsActivity.this, R.color.colorR));
+                    listColors.add(ContextCompat.getColor(MapsActivity.this, R.color.colorR));
+                    listColors.add(ContextCompat.getColor(MapsActivity.this, R.color.colorR));
+                    listColors.add(ContextCompat.getColor(MapsActivity.this, R.color.colorR));
+                    listColors.add(ContextCompat.getColor(MapsActivity.this, R.color.colorR));
+                    listColors.add(ContextCompat.getColor(MapsActivity.this, R.color.colorY));
+                    listColors.add(ContextCompat.getColor(MapsActivity.this, R.color.colorY));
+                    listColors.add(ContextCompat.getColor(MapsActivity.this, R.color.colorY));
+                    listColors.add(ContextCompat.getColor(MapsActivity.this, R.color.colorB));
+                    listColors.add(ContextCompat.getColor(MapsActivity.this, R.color.colorR));
+                    listColors.add(ContextCompat.getColor(MapsActivity.this, R.color.colorB));
+                    listColors.add(ContextCompat.getColor(MapsActivity.this, R.color.colorB));
+                    listColors.add(ContextCompat.getColor(MapsActivity.this, R.color.colorY));
+                    listColors.add(ContextCompat.getColor(MapsActivity.this, R.color.colorR));
+                    listColors.add(ContextCompat.getColor(MapsActivity.this, R.color.colorY));
+
 
 
                     String jsonString = response.body().string();
@@ -138,50 +151,61 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         JSONArray coordinates = geometry.getJSONArray("coordinates");
 
 
+//                        for (int D = 0; D < coordinates.length(); D++) {
+
                             JSONArray coordinateIndex = coordinates.getJSONArray(0);
 
-                        for (int i = 0; i < coordinateIndex.length(); i++) {
+                            for (int i = 0; i < coordinateIndex.length(); i++) {
 
-                            JSONArray jsonArray = coordinateIndex.getJSONArray(i);
-
-
-                            if (jsonArray.get(0) instanceof JSONArray) {
-                                Log.e("myLog", "encontra array");
+                                JSONArray jsonArray = coordinateIndex.getJSONArray(i);
 
 
-                                    JSONArray jsonArray2 = jsonArray.getJSONArray(0);
+                                if (jsonArray.get(0) instanceof JSONArray) {
+                                    Log.e("myLog", "encontra array");
 
-                                for (int l = 0; l < jsonArray2.length(); l++) {
-                                    double lon = jsonArray2.getDouble(0);
-                                    double lat = jsonArray2.getDouble(1);
+
+                                    for (int l = 0; l < jsonArray.length(); l++) {
+
+                                        JSONArray jsonArray2 = jsonArray.getJSONArray(l);
+                                        double lon = jsonArray2.getDouble(0);
+                                        double lat = jsonArray2.getDouble(1);
+                                        LatLng latlng = new LatLng(lat, lon);
+                                        latlngs.add(latlng);
+                                    }
+                                } else {
+                                    double lon = jsonArray.getDouble(0);
+                                    double lat = jsonArray.getDouble(1);
                                     LatLng latlng = new LatLng(lat, lon);
                                     latlngs.add(latlng);
                                 }
-                            } else {
-                                double lon = jsonArray.getDouble(0);
-                                double lat = jsonArray.getDouble(1);
-                                LatLng latlng = new LatLng(lat, lon);
-                                latlngs.add(latlng);
+//                            }
                             }
+                                PolygonOptions recOptions = new PolygonOptions()
+                                        .strokeWidth(2)
+                                        .fillColor(listColors.get(x % listColors.size()))
+                                        .addAll(latlngs);
 
+                                Ciudad = mMap.addPolygon(recOptions);
+
+
+                            Log.i("myLog", "contador:  " + x++);
+                            Log.i("myLog", "municipio:  " + municipios);
                         }
-                        PolygonOptions recOptions = new PolygonOptions()
-                                .strokeWidth(2)
-                                .fillColor(listColors.get(x % listColors.size()))
-                                .addAll(latlngs);
-
-                        Ciudad = mMap.addPolygon(recOptions);
-
-                         Log.i("myLog", "contador:  " + x++);
-                        Log.i("myLog", "municipio:  " + municipios);
-                    }
 
                     mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
                         @Override
                         public void onMapLongClick(LatLng latLng) {
 
-                            Toast.makeText(getApplicationContext(), "Desea reportar un crimen?", Toast.LENGTH_SHORT).show();
-                            mMap.addMarker(new MarkerOptions().position(latLng));
+                            Toast.makeText(getApplicationContext(), "Haz reportado un crimen", Toast.LENGTH_SHORT).show();
+
+                            Marker clicky = mMap.addMarker(new MarkerOptions()
+                                    .position(latLng));
+
+                            BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.mipmap.mkr_robo);
+
+                            clicky.setIcon(bitmapDescriptor);
+
+//                            mMap.addMarker(new MarkerOptions());
 
                             Geocoder geocoder = new Geocoder(getApplicationContext());
                             List<Address> addressList = null;

@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "606017404908",
+    "firebase_url": "https://safe-walk.firebaseio.com",
+    "project_id": "safe-walk",
+    "storage_bucket": "safe-walk.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:606017404908:android:2418e20fdbe2343c",
+        "android_client_info": {
+          "package_name": "com.example.googlemaps"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "606017404908-6pm364b0adklnbmlb1p04qp9u2plqc9g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.googlemaps",
+            "certificate_hash": "3CAE363413F9E12A9992872D3CFBA099DEC8ACF8"
+          }
+        },
+        {
+          "client_id": "606017404908-88su7m7md8pv7kdero8fhkbmtb1337uj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDM5iUzJi0pASKWZ_FmWTGJj6HSfJQ05VE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "606017404908-88su7m7md8pv7kdero8fhkbmtb1337uj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

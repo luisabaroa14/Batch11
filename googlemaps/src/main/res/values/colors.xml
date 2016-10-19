@@ -5,4 +5,11 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorAccent2">#84ff4081</color>
     <color name="colorAccent3">#5ee4ff</color>
+
+
+    <color name="colorY">#94d9cf1a</color>
+    <color name="colorB">#90336eed</color>
+    <color name="colorR">#95f93235</color>
+
+
 </resources>
