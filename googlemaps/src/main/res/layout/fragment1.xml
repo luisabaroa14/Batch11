@@ -17,7 +17,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Atentado"
+                android:text="Robo"
                 android:textSize="50dp" />
 
             <ImageView
@@ -25,7 +25,7 @@
                 android:layout_height="100dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
-                android:src="@mipmap/ic_atentado" />
+                android:src="@mipmap/ic_robo" />
 
             <EditText
                 android:hint="Fecha del crimen: dia/mes/año"
@@ -59,7 +59,7 @@ Instrucciones:
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/mkr_atentado" />
+                android:src="@mipmap/mkr_robo" />
 
 
         </LinearLayout>
