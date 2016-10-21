@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -63,6 +64,7 @@ public class CrimeActivity extends AppCompatActivity {
         adapter.addFragment(BlankFragment3.newInstance("", ""), "Atentado");
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
+        Log.i("myLog","terminado");
     }
 
 
