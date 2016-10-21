@@ -50,13 +50,17 @@
                 android:textSize="17sp"
                 android:text="
 Instrucciones:
+
 1.Para reportar un crimen dar click en el marcador designado para robos.
+
 2.Buscar la ubicación del crimen en el mapa.
+
 3.Dejar presionado sobre el punto hasta que el marcador aparezca-
 
  " />
 
             <ImageView
+                android:id="@+id/mkr_robo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@mipmap/mkr_robo" />
